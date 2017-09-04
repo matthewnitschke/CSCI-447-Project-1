@@ -12,6 +12,7 @@ function getType(str){
 }
 
 function splitIgnoreCommaInQuote(str){
+  // Regex from: https://stackoverflow.com/questions/632475/regex-to-pick-commas-outside-of-quotes
   return str.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/gm);
 }
 
