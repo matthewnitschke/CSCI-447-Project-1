@@ -1,6 +1,6 @@
 # Arff Convert
 
-### Usage
+## Usage
 ```
 node arffConvert.js [filename] [types...]
 ```
@@ -10,8 +10,10 @@ Example
 node arffConvert.js youtube.csv string string date string real
 ```
 
-### Things to note
+### Special Types
+there are two special types.
+* `date` - requires a format for the date, if using ISO-8601 format enter `iso`
+* `enum` - requires a comma separated list of enum options
 
-* If a date type was used, the program will ask what format the date is in. If date is in ISO-8601 format, simply type `iso`
-
-* all `.csv` files must contain a header line which lists each column name separated by a comma
+## Important note
+all `.csv` files must contain a header line which lists each column name separated by a comma
