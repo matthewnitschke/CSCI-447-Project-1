@@ -50,22 +50,46 @@ function processArgs() {
 	// If type is a "date", ask user what format. Because user input is async, use Promises to return result
 	var promises = [];
 	argTypes.forEach((type, index) => {
-		if (type === "date") {
-			promises.push(new Promise((resolve, reject) => {
-				var rl = readline.createInterface({
-					input: process.stdin,
-					output: process.stdout
-				});
+		if (type === "date" || type === "enum") {
+      var rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+      });
+      promises.push(new Promise((resolve, reject) => {
+        if (type === "date"){
+          rl.question(`Enter format for date at index [${index}]: `, function(answer) {
+  					if (answer.trim() === 'iso') {
+  						answer = isoDateFormat;
+  					}
+  					argTypes[index] = `${argTypes[index]} '${answer}'`;
+  					rl.pause();
+  					resolve();
+  				});
+        } else if (type === "enum"){
+          rl.question(`Enter options for enum type at index [${index}] separated by a comma: `, function(answer){
+            var enumOptions = splitIgnoreCommaInQuote(answer).reduce((accumulator, currentValue, index, array) => {
+              if (index == 0){
+                accumulator += "{ ";
+              }
 
-				rl.question(`Enter format for date at index [${index}]: `, function(answer) {
-					if (answer.trim() === 'iso') {
-						answer = isoDateFormat;
-					}
-					argTypes[index] = `${argTypes[index]} '${answer}'`;
-					rl.pause();
-					resolve();
-				});
-			}))
+              accumulator += formatStringColumnData(currentValue.trim());
+
+              if (index < array.length-1){
+                accumulator += ", ";
+              } else {
+                accumulator += " }";
+              }
+
+              return accumulator;
+            }, "");
+
+            argTypes[index] = `${enumOptions}`
+
+            rl.pause();
+            resolve();
+          })
+        }
+      }));
 		}
 	});
 
