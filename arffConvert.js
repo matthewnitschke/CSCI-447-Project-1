@@ -7,16 +7,17 @@ processArgs().then((argumentData) => {
 
   var {fileName, types} = argumentData;
 
-  var file = "";
   fs.readFile(fileName, function(err, data) {
   	var dt = data.toString();
 
+    // get the first line of the .csv file and split it by its commas
   	var headerLine = dt.substring(0, dt.indexOf('\n'));
   	var headers = splitIgnoreCommaInQuote(headerLine);
 
+    // strip off the .csv part of the filename, use it as the relation name
     var relationName = fileName.substring(0, fileName.indexOf('.'));
 
-  	file += `@relation '${relationName}'\n\n`;
+  	var file = `@relation '${relationName}'\n\n`;
 
   	for (var i = 0; i < headers.length; i++) {
   		var header = headers[i];
@@ -28,20 +29,25 @@ processArgs().then((argumentData) => {
 
   	file += "\n@data\n";
 
-  	file += processData(dt.substring(dt.indexOf('\n')).trim(), types);
+    // get rest of .csv excluding header line
+    var csvData = dt.substring(dt.indexOf('\n')).trim();
+  	file += processData(csvData, types);
 
   	fs.writeFile(fileName.split('.')[0] + ".arff", file);
   });
 })
 
 function processArgs(){
-  // get types from command line args
+  // file name is at index 2
   var fileName = process.argv[2];
 
+  // type arguments are any index after 2
   var argTypes = process.argv.filter((arg, index) => {
   	return index > 2
   });
 
+  // iterate through each type argument.
+  // If type is a "date", ask user what format. Because user input is async, use Promises to return result
   var promises = [];
   argTypes.forEach((type, index) => {
   	if (type === "date") {
@@ -57,8 +63,6 @@ function processArgs(){
           }
           argTypes[index] = `${argTypes[index]} '${answer}'`;
     			rl.pause();
-
-
           resolve();
     		});
       }))
@@ -85,7 +89,6 @@ function processData(data, types){
 
     columns.forEach((column, i) => {
       if (types[i] == 'string'){
-
         newLine += formatStringColumnData(column);
       } else {
         newLine += column;
@@ -95,7 +98,6 @@ function processData(data, types){
       if (i < columns.length - 1){
         newLine += ",";
       }
-
     });
 
     retData += newLine + "\n";
@@ -116,8 +118,10 @@ function formatStringColumnData(col){
 function stripWrappedQuotes(str){
   var firstChar = str.substring(0,1);
   var lastChar = str.substring(str.length-1, str.length);
+
+  // The str is wrapped in quotes if the firstChar and lastChar are the same and they are single or double quotes
   if (firstChar == lastChar && (firstChar == `"` || firstChar == `'`)){
-    return str.substring(1, str.length-1);
+    return str.substring(1, str.length-1); // if they are wrapped, strip them
   }
   return str;
 }
@@ -127,6 +131,8 @@ function escapeInvalidStringCharacters(str){
 }
 
 function splitIgnoreCommaInQuote(str) {
+  // Use regex to split a string by its commas, but exclude any commas inside quotes
+
 	// Regex from: https://stackoverflow.com/questions/632475/regex-to-pick-commas-outside-of-quotes
 	return str.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/gm);
 }
