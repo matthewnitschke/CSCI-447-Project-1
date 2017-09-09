@@ -3,6 +3,8 @@
 \usepackage[a4paper, total={6in, 10.5in}]{geometry} % Margins
 
 \usepackage{graphicx}
+\usepackage[simplified]{pgf-umlcd}
+\usepackage{tikz}
 
 
 % \graphicspath{ {images/} } % Images, create a folder called 'images'
@@ -18,9 +20,25 @@
 
 \section{ARFF Converter}
 
+\subsection{Design}
 Our ARFF converter is a simple cli application written in javascript and run via the javascript runtime environment Node.js. The parameters of the program ask for the filename of the .cvs file, and a list of attribute types. Once run, the program parses out the filename and attribute types. It then loops through each attribute type looking for types of "enum" or "date", where if encountered asks the user for enum properties or date format. After the arguments have been parsed, arffConvert reads the desired .csv file and extracts the header line. This line is split into an array by its commas and looped through appending its name and correlating attribute type at each iteration. Finally, the data of the csv file is processed by splitting each line into an array. Each column is formatted by encoding any invalid characters, and ensuring that if the columns type is a string, that the data is wrapped in quotes. After the data processing is complete the file is written to the user's current directory.
 
 When designing this application the first decision to be made was to figure out how to get the attributes data types. We went through two iterations of this design, one used type inference by looking at the actual data of the csv file trying to guess what data type the column was, and the other simply required the user to enter each type as an argument when the program was called. We decided on the second option due to the lack of consistency in the csv files which caused for faulty type inference. Another problem which had to be fixed was dealing with commas within quotes. Csv files usually denote a string with a comma in it by surrounding the string with quotes. This breaks splitting each column by commas because the algorithm only looked for singular commas. A simple regex selector, found on stackoverflow, which ignores commas inside quotes was used to fix this problem. Finally, WEKA requires all strings to be wrapped in quotes. A simple format column function solved this problem by adding quotes to lines which needed them. Although small problem surfaced when this was implemented, because single quotes were used to wrap the data, and text with a single quote in it (such as i'm, that's, it's) broke the quote and henceforth broke the parse. To solve this, a before removing wrapping quotes, a find and replace is done on the data replacing any single quotes with their escaped counterpart: \textbackslash'.
+
+\subsection{UML}
+
+\begin{tikzpicture}
+\begin{class}[text width=10cm ]{ArffConvert}{0, 0}
+\operation{+ processArgs() : Promise}
+\operation{+ processData(fileName : string, types : Array) : string}
+\operation{+ convert()}
+\operation{- askQuestion(question : string) : Promies}
+\operation{- formatStringColumnData(str : string) : string}
+\operation{- stripWrappedQuotes(str : string) : string}
+\operation{- escapeInvalidStringCharacters(str : string) : string}
+\operation{- splitIgnoreCommaInQuotes(str : string) : Array}
+\end{class}
+\end{tikzpicture}
 
 
 
