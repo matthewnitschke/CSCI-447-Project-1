@@ -21,7 +21,6 @@ var arffConvert = function(){
 		return new Promise((resolve) => {
 			function iteration(type, index) {
 				function iterate(){
-					console.log("c: "+fileName);
 					if (index + 1 > argTypes.length){
 
 						resolve({
