@@ -17,6 +17,7 @@
 \maketitle
 
 \section{Description of the Problem}
+The problem is simply the conversion of data from the UCI ML repository (which is in CSV format) to ARFF format, which is the format required by WEKA. This involves having the software find out how many attributes are in the CSV file, what the attributes are/can be, and how to rearrange each individual line to fit the ARFF format. The largest problem for the utility is to determine the datatype of each attribute that is listed in the first row of the CSV file. While the first row (in a CSV file) lists the name of each attribute, it does not list the datatype. The utility must look at each column of each row, and determine the datatype from there. This is done through command-line arguments, where the user enters the types when invoking the utility. If the utility receives its command-line arguments properly and the CSV file is properly formatted, then the end result is a well-formed ARFF file that has lost no data in the translation.
 
 \section{ARFF Converter}
 
