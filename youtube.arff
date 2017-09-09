@@ -4,7 +4,7 @@
 @attribute 'AUTHOR' string
 @attribute 'DATE' date 'yyyy-MM-dd'T'HH:mm:ss'
 @attribute 'CONTENT' string
-@attribute 'CLASS' real
+@attribute 'CLASS' { 'a', 'b', 'c' }
 
 @data
 'LZQPQhLyRh80UYxNuaDWhIGQYNQ96IuCg-AYWqNPjpU','Julius NM',2013-11-07T06:20:48,'Huh, anyway check out this you[tube] channel: kobyoshi02',1

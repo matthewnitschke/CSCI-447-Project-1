@@ -17,56 +17,59 @@ var arffConvert = function(){
 
 		// iterate through each type argument.
 		// If type is a "date", ask user what format. Because user input is async, use Promises to return result
-		var promises = [];
-		argTypes.forEach((type, index) => {
-			if (type === "date" || type === "enum") {
-				promises.push(new Promise((resolve, reject) => {
-					var rl = readline.createInterface({
-						input: process.stdin,
-						output: process.stdout
-					});
-					if (type === "date"){
-						rl.question(`Enter format for date at index [${index}]: `, function(answer) {
-							if (answer.trim() === 'iso') {
-								answer = isoDateFormat;
-							}
-							argTypes[index] = `${argTypes[index]} '${answer}'`;
-							rl.pause();
-							resolve();
-						});
-					} else if (type === "enum"){
-						rl.question(`Enter options for enum type at index [${index}] separated by a comma: `, function(answer){
-							var enumOptions = splitIgnoreCommaInQuote(answer).reduce((accumulator, currentValue, index, array) => {
-								if (index == 0){
-									accumulator += "{ ";
-								}
 
-								accumulator += formatStringColumnData(currentValue.trim());
+		return new Promise((resolve) => {
+			function iteration(type, index) {
+				function iterate(){
+					console.log("c: "+fileName);
+					if (index + 1 > argTypes.length){
 
-								if (index < array.length-1){
-									accumulator += ", ";
-								} else {
-									accumulator += " }";
-								}
-
-								return accumulator;
-							}, "");
-
-							argTypes[index] = `${enumOptions}`
-
-							rl.pause();
-							resolve();
+						resolve({
+							fileName: fileName,
+							types: argTypes
 						})
+					} else {
+						var nextType = argTypes[index+1];
+						iteration(nextType, index+1);
 					}
-				}));
-			}
-		});
+				}
 
-		return Promise.all(promises).then(() => {
-			return {
-				fileName: fileName,
-				types: argTypes
-			};
+				if (type === "date"){
+					askQuestion(`Enter format for date at index [${index}]: `).then((answer) => {
+						if (answer.trim() === 'iso') {
+							answer = isoDateFormat;
+						}
+						argTypes[index] = `${argTypes[index]} '${answer}'`;
+
+						iterate();
+					})
+				} else if (type === "enum"){
+					askQuestion(`Enter options for enum type at index [${index}] separated by a comma: `).then((answer) => {
+						var enumOptions = splitIgnoreCommaInQuote(answer).reduce((accumulator, currentValue, index, array) => {
+							if (index == 0){
+								accumulator += "{ ";
+							}
+
+							accumulator += formatStringColumnData(currentValue.trim());
+
+							if (index < array.length-1){
+								accumulator += ", ";
+							} else {
+								accumulator += " }";
+							}
+
+							return accumulator;
+						}, "");
+
+						argTypes[index] = `${enumOptions}`;
+
+						iterate();
+					})
+				} else {
+					iterate();
+				}
+			}
+			iteration(argTypes[0], 0);
 		});
 	}
 	self.processData = function(data, types){
@@ -136,6 +139,20 @@ var arffConvert = function(){
 	}
 
 	// Utility Functions
+	function askQuestion(questionText){
+		return new Promise((resolve) => {
+			var rl = readline.createInterface({
+				input: process.stdin,
+				output: process.stdout
+			});
+
+			rl.question(questionText, (answer) => {
+				rl.close();
+				resolve(answer);
+			})
+		})
+	}
+
 	function formatStringColumnData(col) {
 		col = stripWrappedQuotes(col);
 		col = escapeInvalidStringCharacters(col);
