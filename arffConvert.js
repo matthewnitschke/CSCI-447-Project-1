@@ -177,7 +177,7 @@ var arffConvert = function(){
 		// Use regex to split a string by its commas, but exclude any commas inside quotes
 
 		// Regex from: https://stackoverflow.com/questions/632475/regex-to-pick-commas-outside-of-quotes
-		return str.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/gm);
+		return str.trim().split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/gm);
 	}
 }
 
