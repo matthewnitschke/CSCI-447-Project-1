@@ -1,0 +1,17 @@
+@relation 'poker'
+
+@attribute 'S1' real
+@attribute 'C1' real
+@attribute 'S2' real
+@attribute 'C2' real
+@attribute 'S3' real
+@attribute 'C3' real
+@attribute 'S4' real
+@attribute 'C4' real
+@attribute 'S5' real
+@attribute 'C5' real
+@attribute 'CLASS' real
+
+@data
+1,1,1,13,2,4,2,3,1,12,0
+3,12,3,2,3,11,4,5,2,5,1
