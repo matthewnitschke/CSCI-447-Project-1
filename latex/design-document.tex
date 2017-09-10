@@ -1,4 +1,3 @@
-
 \documentclass[11pt]{article} % Font size
 \usepackage[a4paper, total={6in, 10.5in}]{geometry} % Margins
 
@@ -60,16 +59,35 @@ We will use five different data sets.  When deciding what data sets to use, we c
 \subsection{Machine Learning Algorithms}
 We will be testing five learning algorithms:
 \begin{enumerate}
-	\item K-nearest neighbor
-	\item Na\"{i}ve Bayes
-	\item Logistic regression
-	\item Decision tree with pruning
-	\item Support vector machine with a nonlinear kernel
+	\item K-nearest neighbor (Larose, 2004)
+	\item Na\"{i}ve Bayes (Zhang, 2004)
+	\item Logistic regression (Witten, Frank, Hall, \& Pal, 2000)
+	\item Decision tree with pruning (Patil, Wadhai, \& Gokhale, 2010)
+	\item Support vector machine with a nonlinear kernel (Hsu, Chang, \& Lin, 2010)
 \end{enumerate}
 These algorithms are already written on Weka, so the only editing of the algorithms will be tuning.
 
 \subsection{Evaluation Measures}
-We will evaluate the algorithms using two Weka analysis methods: Percent correct and elapsed time training.  Accuracy and speed are two common evaluations of machine learning algorithms.  (I need to try and find an article that can support this claim).  Percent correct is a useful evaluation for understanding the overall accuracy of an algorithm with a single number.  We chose elapsed time training because in our tests there will be more training data than testing data.  Therefore, the difference between times will likely be more significant.  K-nearest neighbor is an exception, because it is a lazy algorithm, but elapsed time training will provide valuable information on computation time for the other algorithms.
+We will evaluate the algorithms using two Weka analysis methods: percent correct and area under ROC curve.  Percent correct is a useful evaluation for understanding the overall accuracy of an algorithm with a single number.  We chose the area under ROC curve because while it is a generally useful performance measure, it also has the advantage of depicting the tradeoff between true positives and false positives (Fawcett, 2005).
 
 \section{References}
+\hangindent=0.7cm
+ Larose, D. T. (2004). K-Nearest Neighbor Algorithm. \textit{Discovering Knowledge in Data: An Introduction to Data Mining, 5}.  (90-106)
+
+\hangindent=0.7cm
+\noindent Patil, D. D., Wadhai, V. M., \& Gokhale, J. A. (2010). Evaluation of Decision Tree Pruning Algorithms for Complexity and Classification Accuracy. \textit{International Journal of Computer Applications}. (Volume 11)
+
+\hangindent=0.7cm
+\noindent Hsu, C. W., Chang, C. C., \& Lin, C. J. (2010). A Practical Guide to Support Vector Classification.
+
+\hangindent=0.7cm
+\noindent Fawcett, T. (2005). An introduction to ROC analysis. \textit{Pattern Recognition Letters, 27}. 
+
+\hangindent=0.7cm
+\noindent Zhang, H. (2004). The Optimality of Naive Bayes. \textit{American Association for Artificial Intelligence}.
+
+\hangindent=0.7cm
+\noindent Witten, I. H., Frank, E., Hall, M. A., \& Pal, C. J. (2000). \textit{Data Mining: Practical Machine Learning Tools and Techniques}, 129-131. Elsevier Inc.
+
+
 \end{document}
