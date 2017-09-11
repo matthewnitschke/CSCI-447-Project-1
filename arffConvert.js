@@ -13,7 +13,22 @@ var arffConvert = function(){
 		// type arguments are any index after 2
 		var argTypes = process.argv.filter((arg, index) => {
 			return index > 2
-		});
+		}).reduce((accumulator, arg) => {
+			if (/\[.+\]/.test(arg)){
+				var amount = parseInt(arg.match(/\[.+\]/gm)[0].replace(/[\[\]]/g, ''));
+				var type = arg.replace(/\[.+\]/, '');
+
+				var items = [];
+				for(var i = 0; i < amount; i ++){
+					items.push(type);
+				}
+
+				return accumulator.concat(items);
+			} else {
+				return accumulator.concat(arg);
+			}
+		}, []);
+
 
 		// iterate through each type argument.
 		// If type is a "date", ask user what format. Because user input is async, use Promises to return result
