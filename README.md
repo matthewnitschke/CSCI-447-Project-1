@@ -2,12 +2,12 @@
 
 ## Usage
 ```
-node arffConvert.js [filename] [types...]
+node arffConvert.js <filename> <type> <repeatingType[#]>
 ```
 
 Example
 ```
-node arffConvert.js youtube.csv string string date string real
+node arffConvert.js youtube.csv string[2] date string real
 ```
 
 ### Special Types
